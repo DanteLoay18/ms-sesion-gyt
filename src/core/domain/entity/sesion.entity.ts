@@ -22,5 +22,15 @@ export class Sesion extends Base{
         
         return sesion;
     }
+
+    static UpdateSesion(numeroSesion: string, fechaSesion: Date,usuarioModificacion:string){
+        const sesion= new Sesion();
+
+        sesion.numeroSesion=numeroSesion;
+        sesion.fechaSesion=fechaSesion;
+        sesion.fechaModificacion=new Date();
+        sesion.usuarioModificacion=usuarioModificacion;        
+        return sesion;
+    }
 }
 

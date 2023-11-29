@@ -7,4 +7,4 @@ export class CreateSesionCommand {
                 public readonly idUsuario:string
                 ) { }
     
-}
+}   

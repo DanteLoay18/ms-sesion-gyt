@@ -23,4 +23,16 @@ export class MiembrosComision extends Base{
         miembroComision.fechaCreacion=new Date();
         return miembroComision;
     }   
+
+    static UpdateMiembroComision(presidente:string, miembro1:string, miembro2:string, miembro3:string, iteracion:number,usuarioModificacion:string ){
+        const miembroComision= new MiembrosComision();
+        miembroComision.presidente=presidente;
+        miembroComision.miembro1=miembro1;
+        miembroComision.miembro2=miembro2;
+        miembroComision.miembro3=miembro3;
+        miembroComision.iteracion=iteracion;
+        miembroComision.usuarioModificacion=usuarioModificacion;
+        miembroComision.fechaModificacion=new Date();
+        return miembroComision;
+    }   
 }

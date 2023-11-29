@@ -3,6 +3,7 @@ import { Paginated } from "../utils/Paginated";
 import { MiembrosComisionService } from "src/core/domain/services/miembros-comision.service";
 import { CreateMiembroComisionDto } from "src/core/shared/dtos/miembro-comision/create-miembro-comision.dto";
 import { MiembrosComision } from "src/core/domain/entity/miembros-comision.entity";
+import { UpdateMiembroComisionDto } from "src/core/shared/dtos/miembro-comision/update-miembro-comision.dto";
 
 @Injectable()
 export class MiembrosComisionUseCase{
@@ -94,6 +95,33 @@ export class MiembrosComisionUseCase{
             const miembroComision = MiembrosComision.CreateMiembroComision(presidente, miembro1,miembro2,miembro3,facultad,((miembroComisionUltimaIteracion?.iteracion || 0)+1),usuarioCreacion);
            
             return await this.miembrosComisionService.createMiembrosComision(miembroComision);
+
+        } catch (error) {
+            this.handleExceptions(error)
+        }
+    }
+
+    async updateMiembroComision({idMiembroComision, presidente, miembro1, miembro2, miembro3}:UpdateMiembroComisionDto, usuarioModificacion:string){
+        try {
+            
+            const {success, message, value} = await this.getMiembrosComisiondById(idMiembroComision);
+
+            if(!success){
+                return {
+                    success,
+                    message
+                }
+            }
+
+            
+            if(value?.['presidente'] === presidente && value?.['miembro1']===miembro1 && value?.['miembro2']===miembro2 && value?.['miembro3']===miembro3)
+            return value;
+            
+            
+
+            const miembroComision = MiembrosComision.UpdateMiembroComision(presidente, miembro1,miembro2,miembro3,value?.['iteracion'],usuarioModificacion);
+           
+            return await this.miembrosComisionService.updateMiembrosComision(idMiembroComision,miembroComision);
 
         } catch (error) {
             this.handleExceptions(error)

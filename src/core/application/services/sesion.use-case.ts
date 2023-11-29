@@ -5,6 +5,7 @@ import { CreateSesionDto } from "src/core/shared/dtos/sesion/create-sesion.dto";
 import { Sesion } from "src/core/domain/entity/sesion.entity";
 import { MiembrosComisionUseCase } from "./miembro-comision.use-case";
 import { FindByBusquedaDto } from "src/core/shared/dtos/sesion/find-by-busqueda.dto";
+import { UpdateSesionDto } from "src/core/shared/dtos/sesion/update-sesion.dto";
 @Injectable()
 export class SesionUseCase{
     constructor(private readonly sesionService:SesionService,
@@ -121,6 +122,47 @@ export class SesionUseCase{
             return {
                 success:true,
                 message:"La sesion se creo correctamente"
+            }
+
+        } catch (error) {
+            this.handleExceptions(error)
+        }
+    }
+
+    async updateSesion(updateSesionDto:UpdateSesionDto, usuarioModificacion:string){
+        try {
+            const {success, message, value}= await this.getSesionById(updateSesionDto.idSesion);
+
+            if(!success){
+                return {
+                    success,
+                    message
+                }
+            }
+
+            const sesionEncontrada = await this.findOneByTerm("numeroSesion", updateSesionDto.numeroSesion, updateSesionDto.idSesion, updateSesionDto.facultad);
+
+            if(sesionEncontrada)
+                return {
+                    success:false,
+                    message:"Ese numero de sesion ya se encuentra registrada"
+                }
+
+            const miembroComision= await this.miembroComisionUseCase.updateMiembroComision({presidente:updateSesionDto.presidente, miembro1:updateSesionDto.miembro1, miembro2:updateSesionDto.miembro2, miembro3:updateSesionDto.miembro3, facultad:updateSesionDto.facultad, idMiembroComision:updateSesionDto.idMiembroComision}, usuarioModificacion)
+            
+            const sesion = Sesion.UpdateSesion(updateSesionDto.numeroSesion, updateSesionDto.fechaSesion,usuarioModificacion);
+           
+            const sesionActualizada= await this.sesionService.updateSesion(updateSesionDto.idSesion,sesion);
+
+            if(!sesionActualizada)
+                return {
+                    success:false,
+                    message:"La sesion no se pudo actualizar correctamente"
+                }
+
+            return {
+                success:true,
+                message:"La sesion se actualizo correctamente"
             }
 
         } catch (error) {
