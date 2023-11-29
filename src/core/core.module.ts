@@ -10,12 +10,17 @@ import { MiembrosComisionService } from './domain/services/miembros-comision.ser
 import { MiembrosComisionRepository } from './domain/ports/outbound/miembros-comision.repository';
 import { MiembrosComisionUseCase } from './application/services/miembro-comision.use-case';
 import { CreateSesionCommand, CreateSesionHandler } from './application/features/sesion/write';
+import { FindAllHandler, FindAllQuery, FindByIdHandler, FindByIdQuery } from './application/features/sesion/read';
 
 const MIEMBROCOMISION_PROVIDERS=[
     FindUltimaIteracionByFacultadQuery,
     FindUltimaIteracionByFacultadHandler
 ]
 const SESION_PROVIDERS=[
+    FindAllQuery,
+    FindAllHandler,
+    FindByIdQuery,
+    FindByIdHandler,
     CreateSesionCommand,
     CreateSesionHandler
 ]

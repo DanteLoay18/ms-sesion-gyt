@@ -53,27 +53,27 @@ export class MiembrosComisionUseCase{
    
     async getAllMiembrosComisionByFacultad(page:number, pageSize:number, idFacultad:string){
         try{
-            let solicitud= await this.miembrosComisionService.findAll();
+            let miembrosdecomision= await this.miembrosComisionService.findAll();
 
-            solicitud= solicitud.filter(({facultad})=>facultad===idFacultad)
+            miembrosdecomision= miembrosdecomision.filter(({facultad})=>facultad===idFacultad)
             const startIndex = (page - 1 )*pageSize;
             const endIndex = startIndex + pageSize;
 
-            if(solicitud.length === 0 && page !==1){
+            if(miembrosdecomision.length === 0 && page !==1){
                 const startIndex = (page - 2 )*pageSize;
                 const endIndex = startIndex + pageSize;
                 return {
                     page:page-1,
                     pageSize:pageSize,
-                    items: solicitud.slice(startIndex,endIndex),
-                    total: solicitud.length
+                    items: miembrosdecomision.slice(startIndex,endIndex),
+                    total: miembrosdecomision.length
                 }
             }
             return Paginated.create({
                 page,
                 pageSize,
-                items: solicitud.slice(startIndex,endIndex),
-                total: solicitud.length
+                items: miembrosdecomision.slice(startIndex,endIndex),
+                total: miembrosdecomision.length
             });       
 
         }catch(error){

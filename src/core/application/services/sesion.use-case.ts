@@ -33,29 +33,31 @@ export class SesionUseCase{
     }
 
    
+   
+
     async getAllSesionesByFacultad(page:number, pageSize:number, idFacultad:string){
         try{
-            let sesion= await this.sesionService.findAll();
+            let sesiones= await this.sesionService.findAll();
 
-            sesion= sesion.filter(({facultad})=>facultad===idFacultad)
+            sesiones= sesiones.filter(({facultad})=>facultad===idFacultad)
             const startIndex = (page - 1 )*pageSize;
             const endIndex = startIndex + pageSize;
 
-            if(sesion.length === 0 && page !==1){
+            if(sesiones.length === 0 && page !==1){
                 const startIndex = (page - 2 )*pageSize;
                 const endIndex = startIndex + pageSize;
                 return {
                     page:page-1,
                     pageSize:pageSize,
-                    items: sesion.slice(startIndex,endIndex),
-                    total: sesion.length
+                    items: sesiones.slice(startIndex,endIndex),
+                    total: sesiones.length
                 }
             }
             return Paginated.create({
                 page,
                 pageSize,
-                items: sesion.slice(startIndex,endIndex),
-                total: sesion.length
+                items: sesiones.slice(startIndex,endIndex),
+                total: sesiones.length
             });       
 
         }catch(error){
