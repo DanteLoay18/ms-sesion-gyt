@@ -4,6 +4,7 @@ import { SesionService } from "src/core/domain/services/sesion.service";
 import { CreateSesionDto } from "src/core/shared/dtos/sesion/create-sesion.dto";
 import { Sesion } from "src/core/domain/entity/sesion.entity";
 import { MiembrosComisionUseCase } from "./miembro-comision.use-case";
+import { FindByBusquedaDto } from "src/core/shared/dtos/sesion/find-by-busqueda.dto";
 @Injectable()
 export class SesionUseCase{
     constructor(private readonly sesionService:SesionService,
@@ -53,6 +54,33 @@ export class SesionUseCase{
                     total: sesiones.length
                 }
             }
+            return Paginated.create({
+                page,
+                pageSize,
+                items: sesiones.slice(startIndex,endIndex),
+                total: sesiones.length
+            });       
+
+        }catch(error){
+            this.handleExceptions(error)
+        }
+    }
+
+    async findByBusqueda({page, pageSize, idFacultad, numeroSesion}:FindByBusquedaDto){
+        try{
+            let sesiones= await this.sesionService.findAll();
+
+            sesiones= sesiones.filter(({facultad})=>facultad===idFacultad)
+            const startIndex = (page - 1 )*pageSize;
+            const endIndex = startIndex + pageSize;
+
+            sesiones= sesiones.filter(sesion => {
+                const numeroSesionCoincide = !numeroSesion || sesion.numeroSesion.includes(numeroSesion);
+            
+                
+                return numeroSesionCoincide;
+              });
+
             return Paginated.create({
                 page,
                 pageSize,
