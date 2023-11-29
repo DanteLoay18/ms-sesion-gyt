@@ -3,9 +3,11 @@ import { Paginated } from "../utils/Paginated";
 import { SesionService } from "src/core/domain/services/sesion.service";
 import { CreateSesionDto } from "src/core/shared/dtos/sesion/create-sesion.dto";
 import { Sesion } from "src/core/domain/entity/sesion.entity";
+import { MiembrosComisionUseCase } from "./miembro-comision.use-case";
 @Injectable()
 export class SesionUseCase{
-    constructor(private readonly sesionService:SesionService){}
+    constructor(private readonly sesionService:SesionService,
+                private readonly miembroComisionUseCase:MiembrosComisionUseCase){}
 
     async getSesionById(id:string){
         try{
@@ -72,8 +74,11 @@ export class SesionUseCase{
                     message:"Ese numero de sesion ya se encuentra registrada"
                 }
 
-            const miembroComision :string=""
-            const sesion = Sesion.CreateSesion(createSesionDto.numeroSesion, createSesionDto.fechaSesion, miembroComision, createSesionDto.facultad,usuarioCreacion);
+            const miembroComision= await this.miembroComisionUseCase.createMiembroComision({presidente:createSesionDto.presidente, miembro1:createSesionDto.miembro1, miembro2:createSesionDto.miembro2, miembro3:createSesionDto.miembro3, facultad:createSesionDto.facultad}, usuarioCreacion)
+            
+            console.log(miembroComision)
+            
+            const sesion = Sesion.CreateSesion(createSesionDto.numeroSesion, createSesionDto.fechaSesion, miembroComision._id, createSesionDto.facultad,usuarioCreacion);
            
             const sesionCreado= await this.sesionService.createSesion(sesion);
 
@@ -96,7 +101,7 @@ export class SesionUseCase{
     async findOneByTerm(term:string, valor:string | number, idSesion:string, idFacultad:string){
         let sesiones= await this.sesionService.findByterm(term, valor);
 
-        const sesionEcontrada= sesiones.filter((sesion)=>sesion.facultad===idFacultad && sesion._id!==idSesion)
+        const sesionEcontrada= sesiones.find((sesion)=>sesion.facultad===idFacultad && sesion._id!==idSesion)
 
         return sesionEcontrada;
        

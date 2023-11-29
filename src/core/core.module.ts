@@ -36,22 +36,6 @@ const providers = [
     providers:[
         ...providers,
         {
-            provide:SesionService,
-            useFactory:(
-                sesionRepository:SesionRepository
-            )=> new SesionService(sesionRepository),
-            inject:[
-                SESION_REPOSITORY
-            ]
-        },
-        {
-            provide: SesionUseCase,
-            useFactory: (sesionService: SesionService,) => new SesionUseCase(sesionService),
-            inject: [
-                SesionService
-            ] 
-        },
-        {
             provide:MiembrosComisionService,
             useFactory:(
                 miembrosComisionRepository:MiembrosComisionRepository
@@ -67,6 +51,24 @@ const providers = [
                 MiembrosComisionService
             ] 
         },
+        {
+            provide:SesionService,
+            useFactory:(
+                sesionRepository:SesionRepository
+            )=> new SesionService(sesionRepository),
+            inject:[
+                SESION_REPOSITORY
+            ]
+        },
+        {
+            provide: SesionUseCase,
+            useFactory: (sesionService: SesionService,miembrosComisionUseCase:MiembrosComisionUseCase) => new SesionUseCase(sesionService,miembrosComisionUseCase),
+            inject: [
+                SesionService,
+                MiembrosComisionUseCase
+            ] 
+        },
+        
         
     ],
     exports:[

@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable  } from "@nestjs/common";
 import { Paginated } from "../utils/Paginated";
 import { MiembrosComisionService } from "src/core/domain/services/miembros-comision.service";
+import { CreateMiembroComisionDto } from "src/core/shared/dtos/miembro-comision/create-miembro-comision.dto";
+import { MiembrosComision } from "src/core/domain/entity/miembros-comision.entity";
 
 @Injectable()
 export class MiembrosComisionUseCase{
@@ -33,11 +35,16 @@ export class MiembrosComisionUseCase{
         try {
             let miembrosComision= (await this.miembrosComisionService.findAll()).filter(({facultad})=>facultad===idFacultad);
             
-            miembrosComision=miembrosComision.sort((a, b) => b.iteracion - a.iteracion);
+            if(miembrosComision.length>0){
+                miembrosComision=miembrosComision.sort((a, b) => b.iteracion - a.iteracion);
 
-            const ultimaIteracion = miembrosComision[0];
+                const ultimaIteracion = miembrosComision[0];
+    
+                return ultimaIteracion;
+            }
 
-            return ultimaIteracion;
+            return null;
+            
         } catch (error) {
             this.handleExceptions(error);
         }
@@ -74,6 +81,24 @@ export class MiembrosComisionUseCase{
         }
     }
 
+    async createMiembroComision({presidente, miembro1,miembro2,miembro3,facultad}:CreateMiembroComisionDto, usuarioCreacion:string){
+        try {
+            
+            const miembroComisionUltimaIteracion = await this.getUltimaIteracionMiembrosComisionByFacultad(facultad);
+            if(miembroComisionUltimaIteracion!==null){
+                if(miembroComisionUltimaIteracion.presidente === presidente && miembroComisionUltimaIteracion.miembro1===miembro1 && miembroComisionUltimaIteracion.miembro2===miembro2 && miembroComisionUltimaIteracion.miembro3===miembro3)
+                return miembroComisionUltimaIteracion;
+            }
+            
+
+            const miembroComision = MiembrosComision.CreateMiembroComision(presidente, miembro1,miembro2,miembro3,facultad,((miembroComisionUltimaIteracion?.iteracion || 0)+1),usuarioCreacion);
+           
+            return await this.miembrosComisionService.createMiembrosComision(miembroComision);
+
+        } catch (error) {
+            this.handleExceptions(error)
+        }
+    }
     
 
    

@@ -6,5 +6,4 @@ export class CreateSesionDto{
     miembro2: string;
     miembro3: string;
     facultad: string;
-    iteracion: number;
 }

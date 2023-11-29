@@ -17,7 +17,7 @@ export class Sesion extends Base{
     @Prop({type: Array})
     solicitudes:string[];
 
-    @Prop({type: Boolean})
+    @Prop({type: String})
     miembroComision:string;
 
 
