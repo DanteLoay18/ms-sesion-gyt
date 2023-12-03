@@ -32,5 +32,14 @@ export class Sesion extends Base{
         sesion.usuarioModificacion=usuarioModificacion;        
         return sesion;
     }
+
+    static AgregarSolicitud(solicitudes:string[], usuarioModificacion:string){
+        const sesion= new Sesion();
+        
+        sesion.solicitudes=solicitudes;
+        sesion.fechaModificacion=new Date();
+        sesion.usuarioModificacion=usuarioModificacion;        
+        return sesion;
+    }
 }
 

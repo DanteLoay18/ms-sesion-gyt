@@ -148,7 +148,7 @@ export class SesionUseCase{
                     message:"Ese numero de sesion ya se encuentra registrada"
                 }
 
-            const miembroComision= await this.miembroComisionUseCase.updateMiembroComision({presidente:updateSesionDto.presidente, miembro1:updateSesionDto.miembro1, miembro2:updateSesionDto.miembro2, miembro3:updateSesionDto.miembro3, facultad:updateSesionDto.facultad, idMiembroComision:updateSesionDto.idMiembroComision}, usuarioModificacion)
+            await this.miembroComisionUseCase.updateMiembroComision({presidente:updateSesionDto.presidente, miembro1:updateSesionDto.miembro1, miembro2:updateSesionDto.miembro2, miembro3:updateSesionDto.miembro3, facultad:updateSesionDto.facultad, idMiembroComision:value?.['miembroComision']}, usuarioModificacion)
             
             const sesion = Sesion.UpdateSesion(updateSesionDto.numeroSesion, updateSesionDto.fechaSesion,usuarioModificacion);
            
@@ -165,6 +165,39 @@ export class SesionUseCase{
                 message:"La sesion se actualizo correctamente"
             }
 
+        } catch (error) {
+            this.handleExceptions(error)
+        }
+    }
+
+    async agregarSolicitud(idSesion:string, idSolicitud:string, usuarioModificacion:string){
+        try {
+            const {success, message, value}= await this.getSesionById(idSesion);
+
+            if(!success){
+                return {
+                    success,
+                    message
+                }
+            }
+            const solicitudes = value?.['solicitudes'] || [];
+
+            solicitudes.push(idSolicitud);
+
+            const sesion = Sesion.AgregarSolicitud(solicitudes, usuarioModificacion);
+           
+            const sesionActualizada= await this.sesionService.updateSesion(idSesion,sesion);
+
+            if(!sesionActualizada)
+                return {
+                    success:false,
+                    message:"La solicitud no se agrego a la solicitud correctamente"
+                }
+
+            return {
+                success:true,
+                message:"La solicitud se agrego a la solicitud correctamente"
+            }
         } catch (error) {
             this.handleExceptions(error)
         }

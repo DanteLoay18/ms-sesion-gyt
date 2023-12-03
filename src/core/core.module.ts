@@ -9,7 +9,7 @@ import { SesionUseCase } from './application/services/sesion.use-case';
 import { MiembrosComisionService } from './domain/services/miembros-comision.service';
 import { MiembrosComisionRepository } from './domain/ports/outbound/miembros-comision.repository';
 import { MiembrosComisionUseCase } from './application/services/miembro-comision.use-case';
-import { CreateSesionCommand, CreateSesionHandler } from './application/features/sesion/write';
+import { AgregarSolicitudCommand, AgregarSolicitudHandler, CreateSesionCommand, CreateSesionHandler, UpdateSesionCommand, UpdateSesionHandler } from './application/features/sesion/write';
 import { FindAllHandler, FindAllQuery, FindByBusquedaHandler, FindByBusquedaQuery, FindByIdHandler, FindByIdQuery } from './application/features/sesion/read';
 
 const MIEMBROCOMISION_PROVIDERS=[
@@ -24,7 +24,11 @@ const SESION_PROVIDERS=[
     FindByBusquedaQuery,
     FindByBusquedaHandler,
     CreateSesionCommand,
-    CreateSesionHandler
+    CreateSesionHandler,
+    UpdateSesionCommand,
+    UpdateSesionHandler,
+    AgregarSolicitudCommand,
+    AgregarSolicitudHandler
 ]
 
 const providers = [

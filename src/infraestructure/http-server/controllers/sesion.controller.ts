@@ -6,6 +6,9 @@ import { CreateSesionCommand } from 'src/core/application/features/sesion/write/
 import { FindAllQuery, FindByBusquedaQuery, FindByIdQuery } from 'src/core/application/features/sesion/read';
 import { FindAllPaginadoRequest } from '../model/sesion/find-all-paginado.request';
 import { FindByBusquedaRequest } from '../model/sesion/find-by-busqueda.request';
+import { AgregarSolicitudCommand, UpdateSesionCommand } from 'src/core/application/features/sesion/write';
+import { UpdateSesionRequest } from '../model/sesion/update-sesion.request';
+import { AgregarSolicitudRequest } from '../model/sesion/agregar-solicitud.request';
 
 @Controller()
 export class SesionController{
@@ -37,11 +40,27 @@ export class SesionController{
     }
     
    @MessagePattern({cmd: 'create_sesion'})
-    async findUltimaIteracionMiembroComision({idUsuario,...createSesionRequest}:CreateSesionRequest) {
+    async createSesion({idUsuario,...createSesionRequest}:CreateSesionRequest) {
 
         return await this.command.execute(new CreateSesionCommand(createSesionRequest,idUsuario));
         
     }
+
+    @MessagePattern({cmd: 'update_sesion'})
+    async updateSesion({idUsuario,...updateSesionRequest}:UpdateSesionRequest) {
+
+        return await this.command.execute(new UpdateSesionCommand(updateSesionRequest,idUsuario));
+        
+    }
+
+    @MessagePattern({cmd: 'agregar_solicitud_sesion'})
+    async agregarSolicitudSesion({idUsuario,idSesion,idSolicitud}:AgregarSolicitudRequest) {
+
+        return await this.command.execute(new AgregarSolicitudCommand(idSesion,idSolicitud,idUsuario));
+        
+    }
+
+    
 
     
 }
