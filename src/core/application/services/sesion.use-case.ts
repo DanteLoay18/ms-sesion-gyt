@@ -182,6 +182,14 @@ export class SesionUseCase{
             }
             const solicitudes = value?.['solicitudes'] || [];
 
+            let solicitudEncontrada = solicitudes.find((solicitud:string)=>solicitud === idSolicitud);
+
+            if(solicitudEncontrada)
+            return {
+                success:false,
+                message:"La solicitud ya se encuentra en esta sesion"
+            }
+
             solicitudes.push(idSolicitud);
 
             const sesion = Sesion.AgregarSolicitud(solicitudes, usuarioModificacion);
