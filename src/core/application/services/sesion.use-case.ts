@@ -21,12 +21,23 @@ export class SesionUseCase{
                     message:"El id de la sesion no existe",
                     value:{}
                 }
-            
 
+            const {value } = await this.miembroComisionUseCase.getMiembrosComisiondById(sesion.miembroComision); 
+            
             return {
                 success: true,
                 message: "",
-                value:sesion
+                value:{
+                    _id:sesion._id,
+                    numeroSesion:sesion.numeroSesion,
+                    fechaSesion:sesion.fechaSesion,
+                    solicitudes:sesion.solicitudes,
+                    miembroComision:sesion.miembroComision,
+                    presidente:value?.['presidente'],
+                    miembro1:value?.['miembro1'],
+                    miembro2:value?.['miembro2'],
+                    miembro3:value?.['miembro3'],
+                }
             };
         }catch(error){
             this.handleExceptions(error)
